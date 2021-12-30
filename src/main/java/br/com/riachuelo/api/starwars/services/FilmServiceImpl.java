@@ -1,8 +1,6 @@
 package br.com.riachuelo.api.starwars.services;
 
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -11,11 +9,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.riachuelo.api.starwars.entities.Film;
 import br.com.riachuelo.api.starwars.entities.dto.FilmRequest;
 import br.com.riachuelo.api.starwars.repository.FilmRepository;
-import br.com.riachuelo.api.starwars.services.exceptions.NotFoundException;
+import br.com.riachuelo.api.starwars.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class FilmServiceImpl implements FilmService {
@@ -23,15 +22,16 @@ public class FilmServiceImpl implements FilmService {
 	@Autowired
 	private FilmRepository repository;
 
-	
+	@Transactional
 	@Override
 	public Film create(FilmRequest filmRequest) {
 		return repository.save(filmRequest.requestFilmBuilder());
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public Film findById(Long id) {
-		return repository.findById(id).orElseThrow(() -> new NotFoundException("Film not found"));
+		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Film not found"));
 	}
 
 	@Override
@@ -50,6 +50,7 @@ public class FilmServiceImpl implements FilmService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public void delete(Long id) {
 		Optional<Film> optional = repository.findById(id);
@@ -58,12 +59,13 @@ public class FilmServiceImpl implements FilmService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public Page<Film> findAll(Pageable paginacao) {
 		Page<Film> film = this.repository.findAll(paginacao);
 
 		if (film.isEmpty()) {
-			throw new NotFoundException("Film not found!");
+			throw new ResourceNotFoundException("Film not found!");
 		}
 
 		return film;
