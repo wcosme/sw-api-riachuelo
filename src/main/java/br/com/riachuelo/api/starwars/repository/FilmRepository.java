@@ -9,6 +9,5 @@ import br.com.riachuelo.api.starwars.entities.Film;
 
 @Repository
 public interface FilmRepository extends JpaRepository<Film, Long> {
-
 	Optional<Film> findByTitleIgnoreCase(String title);
 }

@@ -20,18 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.riachuelo.api.starwars.entities.Film;
-import br.com.riachuelo.api.starwars.entities.dto.FilmFilter;
 import br.com.riachuelo.api.starwars.entities.dto.FilmRequest;
 import br.com.riachuelo.api.starwars.entities.dto.FilmResponse;
 import br.com.riachuelo.api.starwars.services.FilmService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/films")
-@Api(tags = "Film")
 public class FilmController {
 
 	@Autowired
@@ -46,8 +43,8 @@ public class FilmController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid FilmRequest requestPut) {
-		service.update(id, requestPut);
+	public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid FilmRequest request) {
+		service.update(id, request);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -65,14 +62,12 @@ public class FilmController {
 	@ApiOperation(value = "Find all films")
 	@GetMapping
 	public ResponseEntity<Page<FilmResponse>> findAll(@RequestParam(value = "title", required = false) String title,
-			@RequestParam(value = "episode_id", required = false) Integer episodeId,
+			@RequestParam(value = "episodeId", required = false) Integer episodeId,
 			@RequestParam(value = "director", required = false) String director,
 			@RequestParam(value = "producer", required = false) String producer,
 			@PageableDefault(page = 0, size = 10) Pageable paginacao) {
 
-		var filmFilter = FilmFilter.builder().title(title).episodeId(episodeId).director(director).producer(producer).build();
-
-		Page<Film> film = service.findAll(filmFilter, paginacao);
+		Page<Film> film = service.findAll(paginacao);
 
 		return ResponseEntity.ok().body(FilmResponse.toFilm(film));
 	}
