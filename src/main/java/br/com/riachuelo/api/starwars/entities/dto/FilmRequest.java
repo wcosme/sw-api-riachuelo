@@ -7,13 +7,19 @@ import javax.validation.constraints.NotBlank;
 import br.com.riachuelo.api.starwars.entities.Film;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@Builder
 public class FilmRequest {
 	
 	private Long id;
