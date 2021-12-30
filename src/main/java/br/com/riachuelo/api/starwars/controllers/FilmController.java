@@ -24,11 +24,14 @@ import br.com.riachuelo.api.starwars.entities.dto.FilmFilter;
 import br.com.riachuelo.api.starwars.entities.dto.FilmRequest;
 import br.com.riachuelo.api.starwars.entities.dto.FilmResponse;
 import br.com.riachuelo.api.starwars.services.FilmService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/films")
+@Api(tags = "Film")
 public class FilmController {
 
 	@Autowired
@@ -55,10 +58,11 @@ public class FilmController {
 	}
 
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Requisição com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FilmResponse.class))),
-			@ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json", schema = @Schema(title = "Resource not found"))),
-			@ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json", schema = @Schema(title = "Missing or invalid request body"))),
-			@ApiResponse(responseCode = "500", content = @Content(mediaType = "application/json", schema = @Schema(title = "Internal Error"))), })
+			@ApiResponse(code = 200, message = "Requisição com sucesso", response = FilmResponse.class),
+			@ApiResponse(code = 400, message = "Bad Request"),
+			@ApiResponse(code = 404, message = "Not Found"),
+			@ApiResponse(code = 500, message = "Internal Server Error")})
+	@ApiOperation(value = "Find all films")
 	@GetMapping
 	public ResponseEntity<Page<FilmResponse>> findAll(@RequestParam(value = "title", required = false) String title,
 			@RequestParam(value = "episode_id", required = false) Integer episodeId,
