@@ -12,11 +12,11 @@ import br.com.riachuelo.api.starwars.entities.dto.FilmRequest;
 import br.com.riachuelo.api.starwars.repository.FilmRepository;
 
 @Configuration
-public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
+public class DataLoaderConfig implements ApplicationListener<ContextRefreshedEvent> {
 
 	private FilmRepository filmRepository;
 
-	public DataLoader(FilmRepository filmRepository) {
+	public DataLoaderConfig(FilmRepository filmRepository) {
 		this.filmRepository = filmRepository;
 	}
 
