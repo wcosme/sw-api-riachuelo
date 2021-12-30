@@ -1,4 +1,4 @@
-package br.com.riachuelo.api.starwars.config.validation;
+package br.com.riachuelo.api.starwars.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.riachuelo.api.starwars.handler.dto.ErrorDTO;
+
 @RestControllerAdvice
 public class ValidationHandler {
 	
@@ -21,13 +23,13 @@ public class ValidationHandler {
 
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public List<ErrorFormDTO> handle(MethodArgumentNotValidException exception) {		
-		List<ErrorFormDTO> dto = new ArrayList<>();
+	public List<ErrorDTO> handle(MethodArgumentNotValidException exception) {		
+		List<ErrorDTO> dto = new ArrayList<>();
 		
 		List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 		fieldErrors.forEach(e -> {
 			String mensagem = messageSource.getMessage(e, LocaleContextHolder.getLocale());
-			ErrorFormDTO erro = new ErrorFormDTO(e.getField(), mensagem);
+			ErrorDTO erro = new ErrorDTO(e.getField(), mensagem);
 			dto.add(erro);
 		});
 		

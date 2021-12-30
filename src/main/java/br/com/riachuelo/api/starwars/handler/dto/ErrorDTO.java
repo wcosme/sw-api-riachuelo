@@ -1,4 +1,4 @@
-package br.com.riachuelo.api.starwars.config.validation;
+package br.com.riachuelo.api.starwars.handler.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class ErrorFormDTO {
+public class ErrorDTO {
 	
 	private String campo;
 	private String mensagem;
