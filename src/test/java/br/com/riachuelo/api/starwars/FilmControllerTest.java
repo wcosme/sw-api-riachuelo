@@ -1,21 +1,17 @@
 package br.com.riachuelo.api.starwars;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+import br.com.riachuelo.api.starwars.entities.Film;
+import br.com.riachuelo.api.starwars.entities.dto.FilmFilter;
+import br.com.riachuelo.api.starwars.entities.dto.FilmRequest;
+import br.com.riachuelo.api.starwars.entities.dto.FilmResponse;
+import br.com.riachuelo.api.starwars.repository.FilmRepository;
+import br.com.riachuelo.api.starwars.services.FilmService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -26,16 +22,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import br.com.riachuelo.api.starwars.entities.Film;
-import br.com.riachuelo.api.starwars.entities.dto.FilmFilter;
-import br.com.riachuelo.api.starwars.entities.dto.FilmRequest;
-import br.com.riachuelo.api.starwars.entities.dto.FilmResponse;
-import br.com.riachuelo.api.starwars.repository.FilmRepository;
-import br.com.riachuelo.api.starwars.services.FilmService;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class FilmControllerTest {
+class FilmControllerTest {
 	
 private FilmService service;
 	
@@ -46,21 +44,16 @@ private FilmService service;
 	@Mock
 	Page<Film> filmPage;	
 	private Film film;	
-	private Long id = 1L;	
+	private final Long id = 1L;
 	private String title;	
-	private Integer episodeId;	
-	private String openingCrawl;	
-	private String director;	
-	private String producer;	
-	private String url;	
-	private LocalDate releaseDate;
+	private Integer episodeId;
 	
 	@Mock
 	private Pageable paginacao = PageRequest.of(0, 10);
 	
 	@BeforeEach
 	void setup() {
-		MockitoAnnotations.openMocks(this);
+		openMocks(this);
 		service = Mockito.mock(FilmService.class);
 		repository = Mockito.mock(FilmRepository.class);
 		filmFilter = Mockito.mock(FilmFilter.class);
@@ -69,16 +62,16 @@ private FilmService service;
 		
 		this.title = "Test";
 		this.episodeId = 1;
-		this.releaseDate = LocalDate.of(2021, 12, 30);
-		this.openingCrawl = "teste openingCrawl Swapi";
-		this.director = "Steven Spilberg";
-		this.producer = "George Lucas";
-		this.url = "https://swapi.dev/api/films/1";
+		LocalDate releaseDate = LocalDate.of(2021, 12, 30);
+		String openingCrawl = "teste openingCrawl Swapi";
+		String director = "Steven Spilberg";
+		String producer = "George Lucas";
+		String url = "https://swapi.dev/api/films/1";
 		
 		Mockito.lenient().when(filmFilter.getTitle()).thenReturn(this.title);
 		Mockito.lenient().when(filmFilter.getEpisodeId()).thenReturn(this.episodeId);
-		Mockito.lenient().when(filmFilter.getDirector()).thenReturn(this.director);
-		Mockito.lenient().when(filmFilter.getProducer()).thenReturn(this.producer);
+		Mockito.lenient().when(filmFilter.getDirector()).thenReturn(director);
+		Mockito.lenient().when(filmFilter.getProducer()).thenReturn(producer);
 		
 		filmFilter = FilmFilter.builder()
 				.title(title)
@@ -126,11 +119,7 @@ private FilmService service;
 				.build();
         
         Page<Film> expected = repository.findAll(paginacao);
-        
-        if(Objects.isNull(expected)) {
-        	expected = new PageImpl<>(films);
-        }
-        
+
         assertEquals(expected, filmPage);
         
     }
